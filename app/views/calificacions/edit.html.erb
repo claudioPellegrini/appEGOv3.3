@@ -1,6 +1,14 @@
-<h1>Editing Calificacion</h1>
-
-<%= render 'form', calificacion: @calificacion %>
-
-<%= link_to 'Show', @calificacion %> |
-<%= link_to 'Back', calificacions_path %>
+<div class="section-container--header row">
+  <div class="col-md-10 col-xs-8">
+    <h2>Modificar Calificación</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <%= render 'form', calificacion: @calificacion %>
+  </div>
+</div>
+</br>
+<div>
+<%= link_to 'Volver', calificacions_path, class: 'btn btn-info btn-sm' %>
+</div>

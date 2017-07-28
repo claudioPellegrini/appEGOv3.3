@@ -8,8 +8,6 @@ class CalificacionsController < ApplicationController
 
     @calificacions = Calificacion.find_by_sql("SELECT Calificacions.id, CALIFICACIONS.compra_id, CALIFICACIONS.VALOR FROM public.CALIFICACIONs JOIN COMPRAS ON CALIFICACIONs.compra_id=COMPRAS.id join Cuenta on COMPRAS.cuentum_id=CUENTA.id WHERE CUENTA.ID="+current_cuentum.id.to_s)
     
-    
-    # @calificacions = Calificacion.all
   end
 
   # GET /calificacions/1

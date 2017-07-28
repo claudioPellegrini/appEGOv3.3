@@ -10,5 +10,9 @@
   <%= @calificacion.valor %>
 </p>
 
-<%= link_to 'Edit', edit_calificacion_path(@calificacion) %> |
-<%= link_to 'Back', calificacions_path %>
+
+<div class="btn-group-vertical">
+<%= link_to 'Editar', edit_calificacion_path(@calificacion), class: 'btn btn-default' %> 
+<%= link_to 'Volver', calificacions_path, class: 'btn btn-info' %>
+
+</div>

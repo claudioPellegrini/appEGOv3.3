@@ -1,0 +1,15 @@
+<tr>
+  <td><%= calificacion.compra.fecha if calificacion%></td>
+  <td><%= calificacion.valor if calificacion%></td>
+  <td>
+  <div class="btn-group">
+    <%= link_to '', calificacion, class: 'btn btn-success btn-sm glyphicon glyphicon-eye-open', :title => "Ver"'' %>  
+    <%= link_to '', edit_calificacion_path(calificacion), class: 'btn btn-default btn-sm glyphicon glyphicon-pencil', :title => "Editar" %>
+    <%= link_to '',
+                calificacion,
+                method: :delete,
+                class: 'btn btn-warning btn-sm glyphicon glyphicon-remove',
+                data: { confirm: 'Esta seguro de eliminar esta calificación?' }, :title => "Eliminar" %>
+  </div>
+  </td>
+</tr>
