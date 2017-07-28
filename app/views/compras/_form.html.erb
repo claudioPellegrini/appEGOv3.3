@@ -30,12 +30,12 @@
     <% if @bebidas.present? %>
     <p><label>BEBIDAS </label></p>
     <% @bebidas.each do |bebida| %>
-              
+        <% if bebida.mi_stock > 0 %>     
           <div class="field">
             <%= check_box_tag "bebidas[]", bebida.id   %> <%= bebida.nombre %> - <%= bebida.tipo %> - <%= bebida.tamanio %>
-            
           </div>
           <br>
+          <% end %>
     <%end%>
     <%end%>
 

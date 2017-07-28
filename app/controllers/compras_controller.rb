@@ -5,6 +5,7 @@ class ComprasController < ApplicationController
   # GET /compras.json
   def index
     @compras = current_cuentum.compras.order('fecha DESC')
+
   end
 
   # GET /compras/1
@@ -36,23 +37,34 @@ class ComprasController < ApplicationController
 
   # GET /compras/new
   def new
-    compras = Compra.where(fecha: Time.now.to_date)
-    compras.each do |c|
-      if current_cuentum.id == c.cuentum_id
-        flash[:error] = "Ya has realizado un compra hoy, no puedes repetir!!"
-        redirect_to :action => "index"
+    menu = Menu.find_by(fecha: Time.now.to_date)
+    franjaActual = Franja.last
+    if menu == nil
+      @div_compra = false
+      @div_msg_menu = true
+    elsif franjaActual == nil
+      @div_compra = false
+      @div_msg_franja = true
+    else
+      @div_compra = true
+      @div_msg = false
+      compras = Compra.where(fecha: Time.now.to_date)
+      compras.each do |c|
+        if current_cuentum.id == c.cuentum_id
+          flash[:error] = "Ya has realizado un compra hoy, no puedes repetir!!"
+          redirect_to :action => "index"
+        end
       end
+        @compra = Compra.new
+        @bebidas = Bebida.all    
+        @tipos = Tipo.all
+        @menus = Menu.all
+        @menus.each do |menu|
+          if menu.fecha.to_date == Time.now.to_date
+            @productos = menu.productos.all
+          end  
+        end 
     end
-      @compra = Compra.new
-      @bebidas = Bebida.all    
-      @tipos = Tipo.all
-      @menus = Menu.all
-      @menus.each do |menu|
-        if menu.fecha.to_date == Time.now.to_date
-          @productos = menu.productos.all
-        end  
-      end 
-    
   end
 
   # GET /compras/1/edit
@@ -83,24 +95,31 @@ class ComprasController < ApplicationController
     @compra = current_cuentum.compras.new(compra_params)
     @compra.fecha =Time.now
     @compra.productos = params[:productos]
-    @compra.bebidas = params[:bebidas]
-    
-    @compra.valor_final_ticket = sumarPrecioBebidas(params[:bebidas]) + valorTicket
+    @compra.bebidas = params[:bebidas]  
 
-    @compra.subscribe(Notifier.new)
-    # @compra.on(:compra_create_succesfull) { redirect_to compras_path }
-    # @compra.on(:compra_create_failed) { render :action => :new }
-    # @compra.commit
+    if params[:productos] == nil
+      flash[:error] = "Debe seleccionar al menos 1 producto!"
+            redirect_to :action => "new"
+      
+    else
+      @compra.valor_final_ticket = sumarPrecioBebidas(params[:bebidas]) + valorTicket
 
-    respond_to do |format|
-      if @compra.save
-        # @compra.on(:compra_creation_successful)
-        format.html { redirect_to @compra, notice: 'La Compra fue creada correctamente.' }
-        format.json { render :show, status: :created, location: @compra }
-      else
-        # @compra.on(:compra_creation_failed)
-        format.html { render :new }
-        format.json { render json: @compra.errors, status: :unprocessable_entity }
+      # @compra.subscribe(PedidoController.new)
+
+      # @compra.on(:compra_create_succesfull) { redirect_to compras_path }
+      # @compra.on(:compra_create_failed) { render :action => :new }
+      # @compra.commit
+
+      respond_to do |format|
+        if @compra.save
+          # @compra.on(:compra_creation_successful)
+          format.html { redirect_to @compra, notice: 'La Compra fue creada correctamente.' }
+          format.json { render :show, status: :created, location: @compra }
+        else
+          # @compra.on(:compra_creation_failed)
+          format.html { render :new }
+          format.json { render json: @compra.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -158,8 +177,7 @@ class ComprasController < ApplicationController
   end
 
   # Retorna el precio final del ticket segun el sueldo del usuario y las franjas definidas
-  def valorTicket
-    
+  def valorTicket    
     usuario = Usuario.find_by(cuenta_id: current_cuentum.id)
     menu = Menu.find_by(fecha: Time.now)
     # byebug

@@ -1,8 +1,12 @@
 <div class="section-container--header row">
   <div class="col-md-10 col-xs-8">
-   <h2>Hola <%= @usuario.nombres %></h2>
+   <h2>Hola <%= $usuarioBarcode.nombres %></h2>
   </div>
 </div>
+<% if flash[:error] %>
+    <div class="alert alert-danger"><%= flash[:error] %></div>
+  <% end %>
+</br>
 <div class="row">
   <div class="col-md-12">
    <%= form_for(:compra, url:{:controller => 'barcode', :action => 'create'}) do |f| %>

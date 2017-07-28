@@ -4,16 +4,15 @@
   <td>
   <div>
   <div class="btn-group">
-
-    
-            <%= link_to '',compra, class: 'btn btn-success btn-sm glyphicon glyphicon-eye-open', :title => "Ver" %>           
+    <%= link_to '',compra, class: 'btn btn-success btn-sm glyphicon glyphicon-eye-open', :title => "Ver" %>  
+    <% if compra.fecha == Time.now.to_date %>         
     <%= link_to '',
                 compra,
                 method: :delete,
                 class: 'btn btn-warning btn-sm glyphicon glyphicon-remove',
                 data: { confirm: 'Esta seguro de eliminar esta compra?' }, :title => "Eliminar" %>
   
-  
+  <% end %>
   </div>
   </td>
 </tr>

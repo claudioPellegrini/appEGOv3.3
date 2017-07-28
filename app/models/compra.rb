@@ -10,6 +10,7 @@ class Compra < ApplicationRecord
 	after_create :actualizo_stock
 	before_destroy :actualizo_stock_destroy
 	has_one :calificacion
+	
 	# after_create :envio_aviso
 	# after_update :envio_aviso
 	# after_destroy :envio_aviso
@@ -30,11 +31,12 @@ class Compra < ApplicationRecord
 
 	# end
 
-	after_create do
-		broadcast(:after_create, self)
-		# byebug
-	end
 
+	# after_create do
+	# 	#broadcast(:after_create, self)
+	# 	#byebug
+
+	# end
 
 	# def call(compra_id)
 	# 	compra = Compra.find_by_id(compra_id)
@@ -84,7 +86,7 @@ class Compra < ApplicationRecord
 
 	def envio_aviso
 		PedidoController.actualizo
-		byebug
+		# byebug
 	end
 
 	def edit_comprados

@@ -1,7 +1,8 @@
 class PedidoController < ApplicationController
 	after_action :index
+	
 	def index
-	  	@compras = Compra.all
+	  	@compras = Compra.all.order('fecha DESC')
 	end
 
 
@@ -11,8 +12,8 @@ class PedidoController < ApplicationController
 
 	def self.actualizo
 	  	# byebug
-	  	@compras = Compra.all
-	  	# redirect_to :action => "index"
+	  	@compras = Compra.all.order('fecha DESC')
+	  	render :action => "index"
 
 	  	# redirect_to pruebo
 	  	# respond_to do |format|

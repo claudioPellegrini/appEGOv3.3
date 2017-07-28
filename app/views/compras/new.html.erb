@@ -1,11 +1,35 @@
-
+<% if flash[:error] %>
+    <div class="alert alert-danger"><%= flash[:error] %></div>
+  <% end %>
+</br>
 <div class="section-container--header row">
-  <div class="col-md-10 col-xs-8">
-    <h2>Nueva Compra</h2>
-  </div>
 </div>
+  <% if @div_msg_menu %>
+  		<h2> <p>Todavia no tenemos el Menu disponible para el dia de hoy!</p>
+  		<p> Por favor intentalo mas tarde.</p>
+  		 </h2>
+
+  <% end %>
+  <% if @div_msg_franja %>
+      <h2> <p>No se reunen las condiciones para realizar una compra! </p>
+      <p> Por favor, comuniquese con el administrador. (error: franjas)</p>
+      <p> Le pedimos disculpas por las molestias causadas.</p>
+       </h2>
+
+  <% end %>
+  
 <div class="row">
+<% if @div_compra %>
+<div class="col-md-10 col-xs-8">
+    <h2>Nueva Compra</h2>
+	</div>
   <div class="col-md-12">
     <%= render 'form', compra: @compra %>
   </div>
+  <% end %>
+</div>
+<div class="btn-group-vertical">
+
+<%= link_to 'Volver', compras_path, class: 'btn btn-default'  %>
+
 </div>

@@ -2,7 +2,7 @@
 class Menu < ApplicationRecord
 	has_many :tiene_productos
 	has_many :productos, through: :tiene_productos
-	has_many :venta, dependent: :destroy
+	# has_many :venta, dependent: :destroy
 	after_create :save_productos
 	after_update :edit_productos
 	before_destroy :destroy_productos

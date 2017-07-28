@@ -1,6 +1,18 @@
 
 <p id="notice"><%= notice %></p>
+<br>
 
+<div class="col-md-12">
+  <div class="btn-group btn-group-justified">
+    
+      <%= link_to 'Nueva Compra', new_compra_path, class: 'btn btn-default'  %>
+    
+    <%= link_to 'Volver', root_path, class: 'btn btn-default' %>
+
+  </div>
+</div>
+<br>
+<br>
 <h1>Compras realizadas</h1>
 
 <div class="row">
@@ -30,12 +42,5 @@
   </div>
   </div>
 
-<br>
-<div class="col-md-12">
-  <div class="btn-group btn-group-justified">
-    <%= link_to 'Nueva Compra', new_compra_path, class: 'btn btn-default'  %>
-  
-    <%= link_to 'Volver', root_path, class: 'btn btn-default' %>
 
-  </div>
-</div>
+

@@ -15,18 +15,25 @@ class BarcodeController < ApplicationController
 		  	redirect_to :action => "index"
 		else	
 			compras = Compra.where(fecha: Time.now.to_date)
+			franjaActual = Franja.last			
 		    compras.each do |c|
-		      if @usuario.cuenta_id == c.cuentum_id
-		        flash[:error] = "Ya has realizado un compra hoy, no puedes repetir!!"
+			    if @usuario.cuenta_id == c.cuentum_id
+			        flash[:error] = "Ya has realizado un compra hoy, no puedes repetir!!"
+			        redirect_to :action => "index"
+			    end		    
+		    end
+		    if franjaActual == nil		    	
+		    	flash[:error] = "No se reunen las condiciones para realizar una compra! Por favor, comuniquese con el administrador. (error: franjas)"
 		        redirect_to :action => "index"
-		      end
 		    end
 		end
 	    $usuarioBarcode = @usuario	
   	end
 
   	def new
-  		get_barcode
+  		if $usuarioBarcode == nil
+  			get_barcode
+  		end
 	    @barcode = Compra.new
 	    @bebidas = Bebida.all
 	    
@@ -48,17 +55,19 @@ class BarcodeController < ApplicationController
 	      end  
 	    end 	    
 	    cuenta = Cuentum.find_by(id: $usuarioBarcode.cuenta_id)
-	    # byebug
 	    @compra = cuenta.compras.new(compra_params)
 	    @compra.fecha =Time.now
 	    @compra.productos = params[:productos]
 	    @compra.bebidas = params[:bebidas]
-	    # @compra.save
-	    
-	    if @compra.save	    	
-	      	redirect_to :action => "show"  
-	    end
-	      	   
+	    if params[:productos] == nil
+      		flash[:error] = "Debe seleccionar al menos 1 producto!"
+            redirect_to :action => "new"      
+   		else
+      		# @compra.valor_final_ticket = sumarPrecioBebidas(params[:bebidas]) + valorTicket
+	    	if @compra.save	    	
+	      		redirect_to :action => "show"  
+	    	end
+	    end 
   	end
 
   	def show

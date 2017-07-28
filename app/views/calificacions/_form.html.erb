@@ -13,7 +13,7 @@
 <div class="panel-body form-group">
 
     <p><%= f.label :compra_id %></p>
-    <%= f.select :compra_id,  Compra.where(cuentum_id: current_cuentum.id ).collect {|t| [ t.fecha , t.id ] }, { include_blank: 'Seleccionar Compra' }, class: 'form-control' %>
+    <%= f.select :compra_id,  Compra.where(cuentum_id: current_cuentum.id ).order('fecha DESC').collect {|t| [ t.fecha , t.id ] }, { include_blank: 'Seleccionar Compra' }, class: 'form-control' %>
   </div>
   
 

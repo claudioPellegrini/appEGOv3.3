@@ -17,8 +17,9 @@
 <div class="row">
   <div class="col-md-12">
     <div class="listing">
+     <% if @div_admin %>
     <div>
-   <h3>Actualizar planilla de sueldos</h3>
+    <h3>Actualizar planilla de sueldos</h3>
    </div>
     
       <%= form_tag import_from_excel_path, multipart: true do %>
@@ -26,6 +27,7 @@
      <%= submit_tag "Importar sueldos", :class=> "btn btn-default"%>
     <% end %>
     </br>
+    <% end %>
     <h3>Usuarios registrados</h3>
       <div class="table-responsive">
         <table class="table table-striped">
