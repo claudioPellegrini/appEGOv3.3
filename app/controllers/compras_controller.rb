@@ -87,7 +87,7 @@ class ComprasController < ApplicationController
     
     @compra.valor_final_ticket = sumarPrecioBebidas(params[:bebidas]) + valorTicket
 
-    @compra.subscribe(PedidoController.new)
+    @compra.subscribe(Notifier.new)
     # @compra.on(:compra_create_succesfull) { redirect_to compras_path }
     # @compra.on(:compra_create_failed) { render :action => :new }
     # @compra.commit

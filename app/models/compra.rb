@@ -32,7 +32,7 @@ class Compra < ApplicationRecord
 
 	after_create do
 		broadcast(:after_create, self)
-		byebug
+		# byebug
 	end
 
 
