@@ -1,7 +1,11 @@
 class BiController < ApplicationController
+    def index
+        control_usuario
+    end
 
 	# graficas usando gema googlecharts
     def compras_por_dia
+        control_usuario
     	max = 0
     	fechas = Array.new
     	data_array_1 = Array.new#[1, 4, 3, 5, 9] 
@@ -33,6 +37,7 @@ class BiController < ApplicationController
     
 
     def productos_mas_consumidos
+        control_usuario
     	nombres = Array.new
 		cantidades = Array.new
 		consulta = Producto.find_by_sql("select Productos.nombre, count(Compra_productos.producto_id)as consumos from Productos, Compra_productos where Productos.id = Compra_productos.producto_id  group by Productos.nombre ")
@@ -53,6 +58,7 @@ class BiController < ApplicationController
 
 
     def consumos_por_mes
+        control_usuario
     	max = 0
     	meses = Array.new
     	data_array_1 = Array.new#[1, 4, 3, 5, 9] 
@@ -82,6 +88,7 @@ class BiController < ApplicationController
     end    
 
     def recaudo_por_dia
+        control_usuario
     	max = 0
         fechas = Array.new
         array2 = Array.new
@@ -110,6 +117,7 @@ class BiController < ApplicationController
     end
 
     def bebidas_mas_consumidas
+        control_usuario
     	nombres = Array.new
 		cantidades = Array.new
 		consulta = Bebida.find_by_sql("select Bebidas.nombre, Bebidas.tipo, Bebidas.tamanio,  count(Compra_bebidas.bebida_id)as consumos from Bebidas, Compra_bebidas where Bebidas.id = Compra_bebidas.bebida_id  group by Bebidas.nombre, Bebidas.tipo, Bebidas.tamanio  ")
@@ -170,5 +178,20 @@ class BiController < ApplicationController
     		return 0
     	end
     end
+
+
+  # control de tipo de usuario logueado
+  def control_usuario    
+    usuarios = Usuario.all
+    usuarios.each do |u|
+      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+        if u.rol == "USUARIO" 
+              redirect_to "welcome/index"         
+        end
+      end
+    end
+  end
+
+
 
 end

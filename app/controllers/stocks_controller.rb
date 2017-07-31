@@ -4,6 +4,7 @@ class StocksController < ApplicationController
   # GET /stocks
   # GET /stocks.json
   def index
+    control_usuario
     @stocks = Stock.order('created_at DESC').all
     @bebidas = Bebida.all
   end
@@ -11,20 +12,24 @@ class StocksController < ApplicationController
   # GET /stocks/1
   # GET /stocks/1.json
   def show
+    control_usuario
   end
 
   # GET /stocks/new
   def new
+    control_usuario
     @stock = Stock.new
   end
 
   # GET /stocks/1/edit
   def edit
+    control_usuario
   end
 
   # POST /stocks
   # POST /stocks.json
   def create
+    control_usuario
     @stock = Stock.new(stock_params)   
     if @stock.cant == nil || @stock.bebida_id == nil || @stock.factura_compra == nil 
       #
@@ -49,6 +54,7 @@ class StocksController < ApplicationController
   # PATCH/PUT /stocks/1
   # PATCH/PUT /stocks/1.json
   def update
+    control_usuario
     respond_to do |format|
       if @stock.update(stock_params)
         format.html { redirect_to @stock, notice: 'Stock actualizado correctamente.' }
@@ -63,12 +69,28 @@ class StocksController < ApplicationController
   # DELETE /stocks/1
   # DELETE /stocks/1.json
   def destroy
+    control_usuario
     @stock.destroy
     respond_to do |format|
       format.html { redirect_to stocks_url, notice: 'Stock eliminado correctamente.' }
       format.json { head :no_content }
     end
   end
+
+
+  # control de tipo de usuario logueado
+  def control_usuario    
+    usuarios = Usuario.all
+    usuarios.each do |u|
+      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+        if u.rol == "USUARIO" 
+              redirect_to "welcome/index"         
+        end
+      end
+    end
+  end
+
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

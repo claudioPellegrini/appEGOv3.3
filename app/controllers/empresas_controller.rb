@@ -4,26 +4,31 @@ class EmpresasController < ApplicationController
   # GET /empresas
   # GET /empresas.json
   def index
+    control_usuario
     @empresas = Empresa.all
   end
 
   # GET /empresas/1
   # GET /empresas/1.json
   def show
+    control_usuario
   end
 
   # GET /empresas/new
   def new
+    control_usuario
     @empresa = Empresa.new
   end
 
   # GET /empresas/1/edit
   def edit
+    control_usuario
   end
 
   # POST /empresas
   # POST /empresas.json
   def create
+    control_usuario
     @empresa = Empresa.new(empresa_params)
     @empresa.nombre =  @empresa.nombre.upcase
     respond_to do |format|
@@ -40,6 +45,7 @@ class EmpresasController < ApplicationController
   # PATCH/PUT /empresas/1
   # PATCH/PUT /empresas/1.json
   def update
+    control_usuario
     respond_to do |format|
       if @empresa.update(empresa_params)
         format.html { redirect_to @empresa, notice: 'La Empresa se ha editado correctamente.' }
@@ -54,12 +60,26 @@ class EmpresasController < ApplicationController
   # DELETE /empresas/1
   # DELETE /empresas/1.json
   def destroy
+    control_usuario
     @empresa.destroy
     respond_to do |format|
       format.html { redirect_to empresas_url, notice: 'La Empresa se ha eliminado correctamente.' }
       format.json { head :no_content }
     end
   end
+
+  # control de tipo de usuario logueado
+  def control_usuario    
+    usuarios = Usuario.all
+    usuarios.each do |u|
+      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+        if u.rol == "USUARIO" 
+              redirect_to "welcome/index"         
+        end
+      end
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

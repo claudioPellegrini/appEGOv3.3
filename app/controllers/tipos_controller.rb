@@ -4,26 +4,31 @@ class TiposController < ApplicationController
   # GET /tipos
   # GET /tipos.json
   def index
+    control_usuario
     @tipos = Tipo.all
   end
 
   # GET /tipos/1
   # GET /tipos/1.json
   def show
+    control_usuario
   end
 
   # GET /tipos/new
   def new
+    control_usuario
     @tipo = Tipo.new
   end
 
   # GET /tipos/1/edit
   def edit
+    control_usuario
   end
 
   # POST /tipos
   # POST /tipos.json
   def create
+    control_usuario
     @tipo = Tipo.new(tipo_params)
     @tipo.nombre =  @tipo.nombre.upcase
     respond_to do |format|
@@ -40,6 +45,7 @@ class TiposController < ApplicationController
   # PATCH/PUT /tipos/1
   # PATCH/PUT /tipos/1.json
   def update
+    control_usuario
     respond_to do |format|
       if @tipo.update(tipo_params)
         format.html { redirect_to @tipo, notice: 'El Tipo de producto se ha editado correctamente.' }
@@ -54,11 +60,12 @@ class TiposController < ApplicationController
   # DELETE /tipos/1
   # DELETE /tipos/1.json
   def destroy
+    control_usuario
     @tipo_elegido = Producto.where(tipo_id: @tipo.id)
     if @tipo_elegido.blank?
       @tipo.destroy
       respond_to do |format|
-        format.html { redirect_to tipos_url, notice: 'Tipo was successfully destroyed.' }
+        format.html { redirect_to tipos_url, notice: 'El Tipo de producto se ha eliminado correctamente.' }
         format.json { head :no_content }
       end
     else
@@ -67,6 +74,20 @@ class TiposController < ApplicationController
       end
     end
   end
+
+
+# control de tipo de usuario logueado
+  def control_usuario    
+    usuarios = Usuario.all
+    usuarios.each do |u|
+      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+        if u.rol == "USUARIO" 
+              redirect_to "welcome/index"         
+        end
+      end
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -4,14 +4,15 @@ class ComprasController < ApplicationController
   # GET /compras
   # GET /compras.json
   def index
+    control_usuario
     @compras = current_cuentum.compras.order('fecha DESC')
-    
   end
+
 
   # GET /compras/1
   # GET /compras/1.json
   def show
-    
+    control_usuario
     @bebidas = Bebida.all
     @productos = Producto.all
     @productos_en_compra = Array.new
@@ -38,6 +39,7 @@ class ComprasController < ApplicationController
 
   # GET /compras/new
   def new
+    control_usuario
     menu = Menu.find_by(fecha: Time.now.to_date)
     franjaActual = Franja.last
     if menu == nil
@@ -70,6 +72,7 @@ class ComprasController < ApplicationController
 
   # GET /compras/1/edit
   def edit
+    control_usuario
     @tipos =Tipo.all
     @menus = Menu.all
     @bebidas =Bebida.all
@@ -83,6 +86,7 @@ class ComprasController < ApplicationController
   # POST /compras
   # POST /compras.json
   def create
+    control_usuario
     @cantidad = params[:cantidad]
     usuarios = Usuario.all
     @bebidas = Bebida.all   
@@ -131,6 +135,7 @@ class ComprasController < ApplicationController
   # PATCH/PUT /compras/1
   # PATCH/PUT /compras/1.json
   def update
+    control_usuario
     @tipos =Tipo.all
     @menus = Menu.all
     @bebidas =Bebida.all
@@ -158,6 +163,7 @@ class ComprasController < ApplicationController
   # DELETE /compras/1
   # DELETE /compras/1.json
   def destroy
+    control_usuario
     @bebidas = @compra.bebidas.all
     
     @compra.destroy
@@ -200,6 +206,24 @@ class ComprasController < ApplicationController
       end
     end
   end
+
+  # control de tipo de usuario logueado
+  def control_usuario
+    if current_cuentum.email == "admin@admin.com"
+      redirect_back(fallback_location: 'welcome/index')
+      return
+    end
+    usuarios = Usuario.all
+    usuarios.each do |u|
+      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+        if u.rol == "ADMINISTRADOR" || u.rol == "OPERARIO"
+              redirect_to "welcome/index"         
+        end
+      end
+    end
+  end
+
+
 
   private
 

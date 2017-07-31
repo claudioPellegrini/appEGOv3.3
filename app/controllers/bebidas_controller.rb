@@ -4,27 +4,31 @@ class BebidasController < ApplicationController
   # GET /bebidas
   # GET /bebidas.json
   def index
+    control_usuario
     @bebidas = Bebida.all
   end
 
   # GET /bebidas/1
   # GET /bebidas/1.json
   def show    
-    
+    control_usuario
   end
 
   # GET /bebidas/new
   def new
+    control_usuario
     @bebida = Bebida.new
   end
 
   # GET /bebidas/1/edit
   def edit
+    control_usuario
   end
 
   # POST /bebidas
   # POST /bebidas.json
   def create
+    control_usuario
     @bebida = Bebida.new(bebida_params)
     @bebida.nombre =  @bebida.nombre.upcase
     respond_to do |format|
@@ -41,6 +45,7 @@ class BebidasController < ApplicationController
   # PATCH/PUT /bebidas/1
   # PATCH/PUT /bebidas/1.json
   def update
+    control_usuario
     respond_to do |format|
       if @bebida.update(bebida_params)
         format.html { redirect_to @bebida, notice: 'La Bebida se ha editado correctamente.' }
@@ -55,6 +60,7 @@ class BebidasController < ApplicationController
   # DELETE /bebidas/1
   # DELETE /bebidas/1.json
   def destroy
+    control_usuario
     @bebidas_compradas = CompraBebida.where(bebida_id: @bebida.id)
     stockActual = Stock.where(bebida_id: @bebida.id).order('created_at DESC').take
     
@@ -71,6 +77,18 @@ class BebidasController < ApplicationController
     else
       respond_to do |format|
         format.html {redirect_to bebidas_url, notice: 'No puede eliminarse la Bebida, ya que fue comprada en un Menu o su Stock es distinto de cero'}
+      end
+    end
+  end
+
+  # control de tipo de usuario logueado
+  def control_usuario    
+    usuarios = Usuario.all
+    usuarios.each do |u|
+      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+        if u.rol == "USUARIO" 
+              redirect_to "welcome/index"         
+        end
       end
     end
   end

@@ -31,6 +31,7 @@ class UsuariosController < ApplicationController
 
   # GET /usuarios/new
   def new
+    control_usuario
     @usuario = Usuario.new
     if current_cuentum.email == "admin@admin.com" 
       @div_edit_admin = true
@@ -85,6 +86,7 @@ class UsuariosController < ApplicationController
   # DELETE /usuarios/1
   # DELETE /usuarios/1.json
   def destroy
+    control_usuario
     @usuario.destroy
     respond_to do |format|
       format.html { redirect_to usuarios_url, notice: 'El Usuario se ha eliminado correctamente.' }
@@ -121,6 +123,20 @@ class UsuariosController < ApplicationController
         redirect_to usuarios_path 
       end
     end
+
+
+
+    # control de tipo de usuario logueado
+  def control_usuario    
+    usuarios = Usuario.all
+    usuarios.each do |u|
+      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+        if u.rol == "USUARIO" 
+              redirect_to "welcome/index"         
+        end
+      end
+    end
+  end
 
 
   private
