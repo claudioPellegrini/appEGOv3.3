@@ -58,7 +58,7 @@ class Compra < ApplicationRecord
 
 	def defino_cantidad(cant)
 		$cantidad = cant
-		byebug
+		# byebug
 	end
 
 
@@ -98,7 +98,7 @@ class Compra < ApplicationRecord
 	end
 
 	def edit_comprados
-		byebug
+		# byebug
 		CompraProducto.where(compra_id: self.id).destroy_all
 		if @productos != nil
 			@productos.each do |producto_id|
