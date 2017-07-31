@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   post 'barcode/new'
   
   get 'pedido/index'
+  get 'compras/pedido'
+
 
   resources :compras
   resources :barcode

@@ -2,7 +2,12 @@ class PedidoController < ApplicationController
 	after_action :index
 	
 	def index
-	  	@compras = Compra.all.order('fecha DESC')
+		if current_cuentum.email == "admin@admin.com"
+        	@div_pedido = true
+        	@div_usuario = false
+    	end 
+	  	@compras = Compra.where("estado = 'PENDIENTE'")
+	  	
 	end
 
 
@@ -22,6 +27,7 @@ class PedidoController < ApplicationController
 	   #  end
 	end
 
+	
   
 
 

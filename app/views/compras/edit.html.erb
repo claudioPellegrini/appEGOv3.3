@@ -1,6 +1,57 @@
-<h1>Editing Compra</h1>
+<h1>Preparando pedido</h1>
 
-<%= render 'form', compra: @compra %>
+<p id="notice"><%= notice %></p>
+<p>
+  <strong>Usuario:</strong>
+  <%= @usuario.nombres %> <%= @usuario.apellidos %>
 
-<%= link_to 'Show', @compra %> |
-<%= link_to 'Back', compras_path %>
+</p>
+<p>
+  <strong>Fecha:</strong>
+  <%= @compra.fecha %>
+
+</p>
+Valor total del consumo: <strong>$<%= @compra.valor_final_ticket %></strong>
+<p>
+  
+  <% @productos_en_compra %>
+</p>
+<% @tipos.each do |t| %>
+      <p><label><%= t.nombre %></label></p>
+	<% @productos_en_compra.each do |producto| %>
+  		<%if producto.tipo && producto.tipo.nombre==t.nombre %>        
+          <div class="field">
+            <p><%= producto.nombre if producto %></p>            
+          </div>
+          <br>
+        <%else%>
+      
+   		<%end%>
+
+	<%end%>
+<%end%>
+
+	<% @bebidas_en_compra.each do |bebida| %>  		  
+          <div class="field">
+            <p><%= bebida.nombre if bebida %> - <%= bebida.tipo if bebida %> - <%= bebida.tamanio if bebida %></p>         
+          </div>
+          <br>
+        
+	<%end%>
+	
+		<%= form_for(@compra) do |f| %>
+			<%= f.hidden_field :estado, :value => "FINALIZADO", :hidden => true, class: 'form-control' %>
+
+  			<%= f.submit "PRONTO!!", class: 'btn btn-info btn-lg' %>
+
+    	<% end %>
+ <br>
+
+  <div class="btn-group-vertical">
+
+<%= link_to 'Volver', compras_path , class: 'btn btn-default'  %>
+
+</div>
+
+
+
