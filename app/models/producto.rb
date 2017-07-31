@@ -7,6 +7,5 @@ class Producto < ApplicationRecord
 	validates :nombre, presence: {message: "^Debe ingresar un nombre"}
 	validates :descripcion, presence: {message: "^Debe ingresar una descripción"}
 	validates :tipo_id, presence: {message: "^Debe seleccionar un tipo"}
-	validates :precio, presence: {message: "^Debe indicar un precio"}
-	
+	validates :cantidad, presence: {message: "^Debe ingresar cantidad"}
 end

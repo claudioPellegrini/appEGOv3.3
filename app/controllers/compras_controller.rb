@@ -5,12 +5,13 @@ class ComprasController < ApplicationController
   # GET /compras.json
   def index
     @compras = current_cuentum.compras.order('fecha DESC')
-
+    
   end
 
   # GET /compras/1
   # GET /compras/1.json
   def show
+    
     @bebidas = Bebida.all
     @productos = Producto.all
     @productos_en_compra = Array.new
@@ -82,6 +83,7 @@ class ComprasController < ApplicationController
   # POST /compras
   # POST /compras.json
   def create
+    @cantidad = params[:cantidad]
     usuarios = Usuario.all
     @bebidas = Bebida.all   
     @menus = Menu.all
@@ -96,7 +98,8 @@ class ComprasController < ApplicationController
     @compra.fecha =Time.now
     @compra.productos = params[:productos]
     @compra.bebidas = params[:bebidas]  
-
+    @compra.defino_cantidad(@cantidad)
+    
     if params[:productos] == nil
       flash[:error] = "Debe seleccionar al menos 1 producto!"
             redirect_to :action => "new"
@@ -113,6 +116,7 @@ class ComprasController < ApplicationController
       respond_to do |format|
         if @compra.save
           # @compra.on(:compra_creation_successful)
+          # @compra.defino_cantidad(:cant)
           format.html { redirect_to @compra, notice: 'La Compra fue creada correctamente.' }
           format.json { render :show, status: :created, location: @compra }
         else
@@ -207,7 +211,7 @@ class ComprasController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def compra_params
-      params.require(:compra).permit(:fecha, :productos, :bebidas)
+      params.require(:compra).permit(:fecha, :productos, :bebidas, :valor, :cantidad)
     end
 
   

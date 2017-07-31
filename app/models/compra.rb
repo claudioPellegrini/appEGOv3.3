@@ -48,12 +48,19 @@ class Compra < ApplicationRecord
 	# include Observable
 
 	def productos=(value)
-
+		# byebug
 		@productos = value
 	end
 	def bebidas=(value)
 		@bebidas = value
 	end
+
+
+	def defino_cantidad(cant)
+		$cantidad = cant
+		byebug
+	end
+
 
 	def save_comprados
 		# byebug
@@ -64,17 +71,18 @@ class Compra < ApplicationRecord
 		end
 		if @bebidas != nil
 			@bebidas.each do |bebida_id|
-				CompraBebida.create(bebida_id: bebida_id, compra_id: self.id)
+				CompraBebida.create(bebida_id: bebida_id, compra_id: self.id, cantidad: $cantidad.to_i)
 
 			end
 		end
 	end
 	def actualizo_stock
+		# byebug
 		if @bebidas != nil
 			@bebidas.each do |bebida_id|
-				
+				# byebug
 				mi_bebida = Stock.where(bebida_id: bebida_id)
-				saldo = mi_bebida.last.cant - 1
+				saldo = mi_bebida.last.cant - $cantidad.to_i
 				mi_bebida.update(cant: saldo )
 				
 			end
@@ -90,7 +98,7 @@ class Compra < ApplicationRecord
 	end
 
 	def edit_comprados
-		
+		byebug
 		CompraProducto.where(compra_id: self.id).destroy_all
 		if @productos != nil
 			@productos.each do |producto_id|
@@ -118,13 +126,13 @@ class Compra < ApplicationRecord
 	end
 
 	def actualizo_stock_destroy
-		
+		# byebug
 		if self.bebidas != nil
 			
 			self.bebidas.each do |bebida_id|
 				
 				mi_bebida = Stock.where(bebida_id: bebida_id)
-				saldo = mi_bebida.last.cant + 1
+				saldo = mi_bebida.last.cant + $cantidad.to_i
 				mi_bebida.update(cant: saldo )
 				
 			end
@@ -134,11 +142,11 @@ class Compra < ApplicationRecord
 
 	private
 
-	def publish_creation_successful
-		broadcast(:compra_creation_successful, self)
-	end
+	# def publish_creation_successful
+	# 	broadcast(:compra_creation_successful, self)
+	# end
 
-	def publish_creation_failed
-		broadcast(:compra_creation_failed, self) if errors.any?
-	end
+	# def publish_creation_failed
+	# 	broadcast(:compra_creation_failed, self) if errors.any?
+	# end
 end

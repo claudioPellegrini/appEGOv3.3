@@ -13,10 +13,7 @@
   <strong>Tipo de producto:</strong>
   <%= @producto.tipo.nombre if @producto.tipo%>
 </p>
-<p>
-  <strong>Precio:</strong>
-  <%= @producto.precio %>
-</p>
+ 
 <div class="btn-group-vertical">
 <%= link_to 'Editar', edit_producto_path(@producto), class: 'btn btn-default' %> 
 <%= link_to 'Volver', productos_path, class: 'btn btn-info' %>
