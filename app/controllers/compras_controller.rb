@@ -4,15 +4,30 @@ class ComprasController < ApplicationController
   # GET /compras
   # GET /compras.json
   def index
-    control_usuario
-    @compras = current_cuentum.compras.order('fecha DESC')
+    usuarios = Usuario.all
+    usuarios.each do |u|
+      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+        if current_cuentum.email == "admin@admin.com" || u.rol == "ADMINISTRADOR" || u.rol == "OPERARIO"
+          @div_pedido = true
+          @div_usuario = false
+          @div_tiempo_pedidos = true    
+          @compras = Compra.where("estado = 'PENDIENTE'")  
+        else
+          @div_pedido = false
+          @div_usuario = true
+          @div_tiempo_pedidos = false
+          @compras = current_cuentum.compras.order('fecha DESC')
+        end
+      end
+    end
+    
   end
 
 
   # GET /compras/1
   # GET /compras/1.json
-  def show
-    control_usuario
+  def show    
+    # control_usuario
     @bebidas = Bebida.all
     @productos = Producto.all
     @productos_en_compra = Array.new
@@ -72,15 +87,41 @@ class ComprasController < ApplicationController
 
   # GET /compras/1/edit
   def edit
-    control_usuario
+    control_pedidos 
+     @div_tiempo_pedidos = false   
+    # @tipos =Tipo.all
+    # @menus = Menu.all
+    # @bebidas =Bebida.all
+    # @menus.each do |menu|
+    #   if menu.fecha.to_date == Time.now.to_date
+    #     @productos = menu.productos.all
+    #   end  
+    # end 
+    @usuario = Usuario.find_by(cuenta_id: @compra.cuentum.id)
+    @bebidas = Bebida.all
+    @productos = Producto.all
+    @productos_en_compra = Array.new
+    @bebidas_en_compra = Array.new
+    compra_prod_bd = CompraProducto.where(compra_id: @compra.id)
+    compra_beb_bd = CompraBebida.where(compra_id: @compra.id)
+     compra_prod_bd.each do |prod|
+        @productos.each do |p|
+          if prod.producto_id == p.id
+            @productos_en_compra.push(p)
+          end
+        end         
+      end
+      compra_beb_bd.each do |beb|
+        @bebidas.each do |b|
+          if beb.bebida_id == b.id
+            @bebidas_en_compra.push(b)
+          end
+        end         
+      end
+
     @tipos =Tipo.all
-    @menus = Menu.all
-    @bebidas =Bebida.all
-    @menus.each do |menu|
-      if menu.fecha.to_date == Time.now.to_date
-        @productos = menu.productos.all
-      end  
-    end 
+    # @compra.estado = "FINALIZADO"
+    # @compra.save
   end
 
   # POST /compras
@@ -101,10 +142,10 @@ class ComprasController < ApplicationController
 
     @compra = current_cuentum.compras.new(compra_params)
     @compra.fecha =Time.now
+    @compra.estado = "PENDIENTE"
     @compra.productos = params[:productos]
     @compra.bebidas = params[:bebidas]  
     @compra.defino_cantidad(@cantidad)
-    
     if params[:productos] == nil
       flash[:error] = "Debe seleccionar al menos 1 producto!"
             redirect_to :action => "new"
@@ -136,24 +177,26 @@ class ComprasController < ApplicationController
   # PATCH/PUT /compras/1
   # PATCH/PUT /compras/1.json
   def update
-    control_usuario
-    @tipos =Tipo.all
-    @menus = Menu.all
-    @bebidas =Bebida.all
-    @menus.each do |menu|
-      if menu.fecha.to_date == Time.now.to_date
-        @productos = menu.productos.all
-      end  
-    end 
-    respond_to do |format|
-      if @compra.update(compra_params)
-        format.html { redirect_to @compra, notice: 'Compra actualizada correctamente.' }
-        format.json { render :show, status: :ok, location: @compra }
-      else
-        format.html { render :edit }
-        format.json { render json: @compra.errors, status: :unprocessable_entity }
-      end
-    end
+    @compra.update(compra_params)
+    redirect_to compras_path
+    # control_usuario
+    # @tipos =Tipo.all
+    # @menus = Menu.all
+    # @bebidas =Bebida.all
+    # @menus.each do |menu|
+    #   if menu.fecha.to_date == Time.now.to_date
+    #     @productos = menu.productos.all
+    #   end  
+    # end 
+    # respond_to do |format|
+    #   if @compra.update(compra_params)
+    #     format.html { redirect_to @compra, notice: 'Compra actualizada correctamente.' }
+    #     format.json { render :show, status: :ok, location: @compra }
+    #   else
+    #     format.html { render :edit }
+    #     format.json { render json: @compra.errors, status: :unprocessable_entity }
+    #   end
+    # end
 
     # @compra.subscribe(Notifier.new)
     # @compra.on(:compra_update_successful) { redirect_to compras_path }
@@ -224,6 +267,22 @@ class ComprasController < ApplicationController
     end
   end
 
+  def pedido
+    byebug
+    @compra.estado = "FINALIZADO"
+  end
+
+
+  def control_pedidos   
+    usuarios = Usuario.all
+    usuarios.each do |u|
+      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+        if u.rol == "USUARIO" 
+              redirect_to "welcome/index"         
+        end
+      end
+    end
+  end
 
 
   private
@@ -236,7 +295,7 @@ class ComprasController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def compra_params
-      params.require(:compra).permit(:fecha, :productos, :bebidas, :valor, :cantidad)
+      params.require(:compra).permit(:fecha, :productos, :bebidas, :valor, :estado, :cantidad)
     end
 
   

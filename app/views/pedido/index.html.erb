@@ -1,8 +1,36 @@
-<h1>Pedido#index</h1>
-<p>Find me in app/views/pedido/index.html.erb</p>
+<meta http-equiv="refresh" content="5">
 
-<% @compras.each do |compra| %>
 
-	<p><%= compra.fecha %></p>  
+<p id="notice"><%= notice %></p>
 
-<%end%>
+
+<br>
+<br>
+<h1>Pedidos pendientes</h1>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="listing">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Fecha</th>              
+              <th colspan="3"></th>
+            </tr>
+            <% if flash[:error] %>
+              <div class="alert alert-danger"><%= flash[:error] %></div>
+            <% end %>
+            </br>
+          </thead>
+
+  
+        <tbody>
+                <%= render @compras %>
+        </tbody>
+      </table>
+
+      </div>
+    </div>
+  </div>
+  </div>
