@@ -88,6 +88,7 @@ class ComprasController < ApplicationController
   def create
     control_usuario
     @cantidad = params[:cantidad]
+    byebug
     usuarios = Usuario.all
     @bebidas = Bebida.all   
     @menus = Menu.all
