@@ -5,6 +5,7 @@ class ComprasController < ApplicationController
   # GET /compras.json
   def index
     usuarios = Usuario.all
+    $i = 0
     usuarios.each do |u|
       if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
         if current_cuentum.email == "admin@admin.com" || u.rol == "ADMINISTRADOR" || u.rol == "OPERARIO"
@@ -129,6 +130,7 @@ class ComprasController < ApplicationController
   def create
     control_usuario
     @cantidad = params[:cantidad]
+    
     byebug
     usuarios = Usuario.all
     @bebidas = Bebida.all   
@@ -298,6 +300,11 @@ class ComprasController < ApplicationController
       params.require(:compra).permit(:fecha, :productos, :bebidas, :valor, :estado, :cantidad)
     end
 
-  
+#    <% if @bebidas.present? %>
+#     <p><label>Seleccione su Bebida </label></p>
+#      <%= select_tag "miBebida", options_for_select(Bebida.find_by_sql("SELECT b.nombre, b.tipo, b.tamanio, s.cant
+#   FROM bebidas as b join stocks as s on b.id = s.bebida_id and cant >0 group by b.nombre, b.tipo, b.tamanio, s.cant").collect{ |u| [ u.nombre+" - "+ u.tipo+ " - "+ u.tamanio,  u.id]}) %>  
+# <b>    Cantidad: </b><input id="cantidad1" name="cantidad1" min="1"   step= "1" type="number" />
+#   <%end%>
 
 end
