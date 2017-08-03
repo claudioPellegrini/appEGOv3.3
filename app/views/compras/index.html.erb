@@ -1,52 +1,52 @@
 <% if @div_tiempo_pedidos %> 
   <script language="javascript" type="text/javascript">setTimeout("location.reload();",20000);</script>
-  <% end %>
+<% end %>
 <p id="notice"><%= notice %></p>
 <br>
- <% if @div_usuario %>
-<div class="col-md-12">
-  <div class="btn-group btn-group-justified">
+  <% if @div_usuario %>
+    <div class="col-md-12">
+    <div class="btn-group btn-group-justified">
    
       <%= link_to 'Nueva Compra', new_compra_path, class: 'btn btn-default'  %>
     
-    <%= link_to 'Volver', root_path, class: 'btn btn-default' %>
+      <%= link_to 'Volver', root_path, class: 'btn btn-default' %>
 
-  </div>
-</div>
-<br>
-<br>
-<h1>Compras realizadas</h1>
-<% end %>
- <% if @div_pedido %>
-<br>
-<h1>Pedidos pendientes</h1>
-<% end %>
-<div class="row">
-  <div class="col-md-12">
-    <div class="listing">
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Pedido id</th>  
-              <th>Fecha</th>              
-              <th colspan="3"></th>
-            </tr>
-            <% if flash[:error] %>
-              <div class="alert alert-danger"><%= flash[:error] %></div>
-            <% end %>
-            </br>
-          </thead>
+    </div>
+    </div>
+    <br>
+    <br>
+    <h1>Compras realizadas</h1>
+  <% end %>
+  <% if @div_pedido %>
+    <br>
+    <h1>Pedidos pendientes</h1>
+  <% end %>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="listing">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Pedido id</th>  
+                <th>Fecha</th>              
+                <th colspan="3"></th>
+              </tr>
+                <% if flash[:error] %>
+                <div class="alert alert-danger"><%= flash[:error] %></div>
+                <% end %>
+              </br>
+            </thead>
 
-  
-        <tbody>
-                <%= render @compras %>
-        </tbody>
-      </table>
+    
+            <tbody>
+              <%= render @compras if @compras %>
+            </tbody>
+          </table>
 
+        </div>
       </div>
     </div>
-  </div>
   </div>
 
 

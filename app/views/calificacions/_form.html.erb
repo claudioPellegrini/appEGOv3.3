@@ -1,34 +1,35 @@
 <%= form_for(calificacion) do |f| %>
-  <% if calificacion.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(calificacion.errors.count, "error") %> prohibited this calificacion from being saved:</h2>
-
-      <ul>
+<div class="panel panel-default">
+    <div class="panel-body">
       <% calificacion.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+        <div class="alert alert-danger"><%= message %></div>
       <% end %>
-      </ul>
-    </div>
-  <% end %>
-<div class="panel-body form-group">
+      <div class="panel-body form-group  hidden">
 
-    <p><%= f.label :compra_id %></p>
-    <%= f.select :compra_id,  Compra.where(cuentum_id: current_cuentum.id ).order('fecha DESC').collect {|t| [ t.fecha , t.id ] }, { include_blank: 'Seleccionar Compra' }, class: 'form-control' %>
-  </div>
+        <p><%= f.label :compra_id %></p>
+        <%= f.select :compra_id,  Compra.where(cuentum_id: current_cuentum.id ).order('fecha DESC').collect {|t| [ t.fecha , t.id ] }, { include_blank: 'Seleccionar Compra' }, class: 'form-control' %>
+      </div>
   
 
  <div class="ec-stars-wrapper">
-  <%= link_to '&#9733;'.html_safe, calificacions_path, class: 'prueboClase'%> 
-  
-  
+ </div> 
   <div class="panel-body form-group">
     <p><%= f.label :valor %></p>
     <%= f.number_field :valor, :step => "1", min: 0, max: 5, class: 'form-control' %>
   </div>
   
-</div>
 
-  <div class="actions">
-    <%= f.submit %>
+
+  <div class="col-md-12">
+      <div class="btn-group btn-group-justified">
+        
+        <div class="btn-group">
+        <%= f.submit "Realizar calificacion", class: 'btn btn-info ' %>
+        </div>
+        <div class="btn-group">
+        <%= link_to 'Cancelar', calificacions_path, class: 'btn btn-info '  %>
+        </div>
+      </div>
+    </div>
   </div>
 <% end %>

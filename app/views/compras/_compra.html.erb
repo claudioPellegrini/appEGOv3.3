@@ -1,12 +1,12 @@
 <tr>
-  <td><%= compra.id %></td>
-  <td><%= compra.fecha %></td>
-
+  <td><%= compra.id if compra%></td>
+  <td><%= compra.fecha if compra%></td>
   
   <td>
   <div>
   <div class="btn-group">
   <% if @div_usuario %>
+  
     <%= link_to '',compra, class: 'btn btn-success btn-sm glyphicon glyphicon-eye-open', :title => "Ver" %> 
   
     <% if compra.fecha == Time.now.to_date && compra.estado == "PENDIENTE"%>         
@@ -19,6 +19,7 @@
     <% end %>
   <% end %> 
   <% if @div_pedido %> 
+  
     <%= link_to '',
                 compra,
                 method: :delete,

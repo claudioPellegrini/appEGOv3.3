@@ -6,22 +6,31 @@ class ComprasController < ApplicationController
   def index
     usuarios = Usuario.all
     $i = 0
-    usuarios.each do |u|
-      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
-        if current_cuentum.email == "admin@admin.com" || u.rol == "ADMINISTRADOR" || u.rol == "OPERARIO"
-          @div_pedido = true
-          @div_usuario = false
-          @div_tiempo_pedidos = true    
-          @compras = Compra.where("estado = 'PENDIENTE'")  
-        else
-          @div_pedido = false
-          @div_usuario = true
-          @div_tiempo_pedidos = false
-          @compras = current_cuentum.compras.order('fecha DESC')
+    if current_cuentum.email == "admin@admin.com"
+      @div_pedido = true
+      @div_usuario = false
+      @div_tiempo_pedidos = true    
+      @compras = Compra.where("estado = 'PENDIENTE'")
+    else
+      usuarios.each do |u|
+        if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+          
+          if u.rol == "ADMINISTRADOR" || u.rol == "OPERARIO"
+            @div_pedido = true
+            @div_usuario = false
+            @div_tiempo_pedidos = true    
+            @compras = Compra.where("estado = 'PENDIENTE'")  
+            
+          else
+            
+            @div_pedido = false
+            @div_usuario = true
+            @div_tiempo_pedidos = false
+            @compras = current_cuentum.compras.order('fecha DESC')
+          end
         end
       end
     end
-    
   end
 
 
