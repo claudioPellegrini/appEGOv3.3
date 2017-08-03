@@ -35,7 +35,7 @@ class CalificacionsController < ApplicationController
 
     respond_to do |format|
       if @calificacion.save
-        format.html { redirect_to @calificacion, notice: 'Calificacion was successfully created.' }
+        format.html { redirect_to @calificacion, notice: 'La calificacion se ha realizado correctamente.' }
         format.json { render :show, status: :created, location: @calificacion }
       else
         format.html { render :new }
@@ -50,7 +50,7 @@ class CalificacionsController < ApplicationController
     control_usuario
     respond_to do |format|
       if @calificacion.update(calificacion_params)
-        format.html { redirect_to @calificacion, notice: 'Calificacion was successfully updated.' }
+        format.html { redirect_to @calificacion, notice: 'La calificacion se ha editado correctamente.' }
         format.json { render :show, status: :ok, location: @calificacion }
       else
         format.html { render :edit }
@@ -65,7 +65,7 @@ class CalificacionsController < ApplicationController
     control_usuario
     @calificacion.destroy
     respond_to do |format|
-      format.html { redirect_to calificacions_url, notice: 'Calificacion was successfully destroyed.' }
+      format.html { redirect_to calificacions_url, notice: 'La calificacion se ha eliminado correctamente.' }
       format.json { head :no_content }
     end
 

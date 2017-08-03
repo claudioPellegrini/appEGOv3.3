@@ -54,21 +54,58 @@ class BarcodeController < ApplicationController
 	        @productos = menu.productos.all
 	      end  
 	    end 	    
-	    cuenta = Cuentum.find_by(id: $usuarioBarcode.cuenta_id)
+	    cuenta = Cuentum.find_by(id: $usuarioBarcode.cuenta_id)	    
 	    @compra = cuenta.compras.new(compra_params)
 	    @compra.fecha =Time.now
+	    @compra.estado = "PENDIENTE"
 	    @compra.productos = params[:productos]
 	    @compra.bebidas = params[:bebidas]
 	    if params[:productos] == nil
       		flash[:error] = "Debe seleccionar al menos 1 producto!"
             redirect_to :action => "new"      
    		else
-      		# @compra.valor_final_ticket = sumarPrecioBebidas(params[:bebidas]) + valorTicket
+      		@compra.valor_final_ticket = sumarPrecioBebidas(params[:bebidas]) + valorTicket
 	    	if @compra.save	    	
 	      		redirect_to :action => "show"  
 	    	end
 	    end 
   	end
+
+
+  	# Retorna la suma los precios de las bebidas seleccionadas
+	  def sumarPrecioBebidas(valor)
+	    lasBebidas = valor
+	    suma = 0
+	    if lasBebidas != nil      
+	      lasBebidas.each do |b|
+	        bebAux = Bebida.find(b.to_i)
+	        suma = suma + bebAux.precio
+	      end
+	      return suma
+	    end
+	    return suma
+	  end
+
+	  # Retorna el precio final del ticket segun el sueldo del usuario y las franjas definidas
+	  def valorTicket    
+	    usuario = $usuarioBarcode
+	    menu = Menu.find_by(fecha: Time.now)
+	    # byebug
+	    franjaActual = Franja.last
+	    if menu == nil
+	      return 0
+	    end
+	    if usuario != nil && franjaActual != nil
+
+	      if usuario.salario <= franjaActual.primera_hasta
+	        return franjaActual.primera_precio
+	      elsif usuario.salario >= franjaActual.primera_hasta && usuario.salario <= franjaActual.segunda_hasta
+	        return franjaActual.segunda_precio
+	      else
+	        return franjaActual.tercera_precio
+	      end
+	    end
+	  end
 
   	def show
   		@message = ">>>	La Compra se realizo exitosamente!!"
